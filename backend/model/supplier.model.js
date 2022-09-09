@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const SupplierSchema = new mongoose.Schema({
     company: {
         type: String,
-        required: false
+        required: true
     },
     description: {
         type: String,
@@ -13,8 +13,13 @@ const SupplierSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    phone: {
+        type: Number,
+        required: true,
+        unique: true
+    },
     status: {
-        type: String.apply,
+        type: String,
         enum: ['active', 'inactive'],
         default: 'inactive'
     },
@@ -22,17 +27,18 @@ const SupplierSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    regstration: {
-       type: 
-        {
-            type: String,
-            enum: ["PAN", "VAT"],
-            default: 'PAN'
-        },
-        number: {
-            type: Number,
+    reg_type: {
+        type: String,
+        enum: ['PAN', 'VAT'],
+        default: 'PAN'
+    },
+    reg_num: {
+        type: Number,
             required: true
-        }
+    },
+    created_by: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     }
 }, {
     timestamps: true

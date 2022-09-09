@@ -8,7 +8,7 @@ const usrCtrl = new UserController;
 
 router.route("/:id")
     .get(usrCtrl.getUserById)
-    .patch(isLoggedIn, usrCtrl.updateUserById)
+    .put(isLoggedIn, usrCtrl.updateUserById)
     .delete(usrCtrl.deleteUserById)
 
 router.get("/", usrCtrl.getAllUsers)

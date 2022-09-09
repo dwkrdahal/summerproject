@@ -3,6 +3,7 @@ const Product = require("../model/product.model");
 class ProductController{
     addProduct = (req, res, next) => {
         let data = req.body;
+        data.created_by = req.auth_user._id;
 
         if(req.files) {
             let images = [];
@@ -12,7 +13,7 @@ class ProductController{
             data.images = images
         }
 
-        data.after_discount = data.price-data.price * data.discount/100;
+        data.after_discount = data.sell_price-data.sell_price * data.discount/100;
      
         let product = new Product(data);
         product.save()
@@ -40,7 +41,7 @@ class ProductController{
             data.images = data.images.split(",");
         }
 
-        console.log(data.images);
+        // console.log(data.images);
         if(req.files) {
             let images = [];
             req.files.map((o) => {
@@ -50,7 +51,7 @@ class ProductController{
             data.images = [...data.images, ...images]
         }
 
-        data.after_discount = data.price-data.price * data.discount/100;
+        data.after_discount = data.sell_price-data.sell_price * data.discount/100;
 
         Product.findById(req.params.id)
         .then((product) => {
@@ -85,6 +86,7 @@ class ProductController{
         Product.findById(req.params.id)
         .populate('supplier')
         .populate('brand')
+        .populate('category')
         .then((product) => {
             if(product) {
                 res.json({
@@ -132,25 +134,53 @@ class ProductController{
         Product.find()
         .populate('supplier')
         .populate('brand')
+        .populate('category')
+        .populate('created_by')
         .then((products) => {
             if(products) {
                 res.json({
                     result: products,
                     status: true,
-                    msg: "Fetched"
+                    msg: "Product List Fetched"
                 })
             } else {
                 res.json({
                     result: products,
                     status: false,
-                    msg: "Sorry! Products does not exist."
+                    msg: "Error! While fetching products"
                 })
             }
         })
         .catch((error) => {
-            next({status:400, msg:"Error while fetching the data"})
+            next({status:400, msg:error})
         })
     }   
+
+    getProductsByCatId = (req, res, next) => {
+        Product.find({
+            status: "active",
+            $or: [
+                {"category": req.params.id},
+            ]
+        })
+        .then((products) => {
+            res.json({result: products, msg: "Fetched", status: true})
+        })
+        .catch((error) => {next({status: 400, msg: "Error while fetching products"})})
+    }
+
+    getProductsByBrandId = (req, res, next) => {
+        Product.find({
+            status: "active",
+            $or: [
+                {"brand": req.params.id},
+            ]
+        })
+        .then((products) => {
+            res.json({result: products, msg: "Fetched", status: true})
+        })
+        .catch((error) => {next({status: 400, msg: "Error while fetching products"})})
+    }
 }
 
 module.exports = ProductController;

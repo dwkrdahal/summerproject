@@ -9,8 +9,13 @@ router.route('/')
     .post(isLoggedIn, upload.array('image'), prodCtrl.addProduct)
     .get(prodCtrl.getAllProducts);
 
+router.get('/category/:id', prodCtrl.getProductsByCatId);
+router.get('/brand/:id', prodCtrl.getProductsByBrandId);
+router.get("/related/:id", prodCtrl.getProductsByCatId)
+
+
 router.route("/:id")
-    .put(isLoggedIn,upload.array('image'), prodCtrl.editProduct)
-    .delete(isLoggedIn,prodCtrl.deleteProductById)
+    .put(isLoggedIn, upload.array('image'), prodCtrl.editProduct)
+    .delete(isLoggedIn, prodCtrl.deleteProductById)
     .get(prodCtrl.getProductById);
 module.exports = router;

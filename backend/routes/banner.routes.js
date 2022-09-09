@@ -12,9 +12,12 @@ router.route("/")
     .get(bannerCtrl.index)
     .post(isLoggedIn, isAdmin, upload.single('image'), bannerCtrl.store);
 
+router.get('/home', bannerCtrl.getBannerForHome);
+
 router.route("/:id")
     .get(bannerCtrl.getBannerById)
-    .put(isLoggedIn, isAdmin, upload.single('image', bannerCtrl.updateBanner))
+    .put(isLoggedIn, isAdmin, upload.single('image'), bannerCtrl.updateBanner)
+    .delete(isLoggedIn, isAdmin, bannerCtrl.deleteBannerById)
 
 
 module.exports = router;

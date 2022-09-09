@@ -8,6 +8,10 @@ const BannerSchema = new mongoose.Schema({
         type: String,
         enum: ['active','inactive'],
         default: 'inactive'
+    },
+    created_by: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     }
 }, {
     timestamps: true

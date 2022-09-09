@@ -1,6 +1,32 @@
 const Supplier = require("../model/supplier.model");
 
 class SupplierController {
+    addSupplier = (req, res, next) => {
+        let data = req.body;
+        console.log(data)
+
+        if(req.file){
+            data.image = req.file.filename;
+        }
+        data.created_by = req.auth_user._id;
+
+        let sup = new Supplier(data);
+        sup.save()
+            .then((response) => {
+                res.json({
+                    result: sup,
+                    status: true,
+                    msg: "Supplier Created Successfully"
+                })
+            })
+            .catch((err) => {
+                next({
+                    status: 400,
+                    msg: err
+                })
+            })
+    }
+
     getSupplierById = (req, res, next) => {
         let id = req.params.id;
         Supplier.findById(id)

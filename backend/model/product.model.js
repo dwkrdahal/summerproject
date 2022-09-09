@@ -12,7 +12,12 @@ const ProductSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    price: {
+    purch_price: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    sell_price: {
         type: Number,
         required: true,
         min: 0
@@ -45,7 +50,7 @@ const ProductSchema = new mongoose.Schema({
         enum: ["active", "inactive"],
         default: "inactive"
     },
-    supplied_by: {
+    supplier: {
         type: mongoose.Types.ObjectId,
         ref: "Supplier"
     },
@@ -56,6 +61,10 @@ const ProductSchema = new mongoose.Schema({
     brand: {
         type: mongoose.Types.ObjectId,
         ref: "Brand"
+    },
+    created_by: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
     }
 }, {
     timestamps: true

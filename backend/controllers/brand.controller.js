@@ -4,6 +4,7 @@ class BrandController{
     index = (req, res, next) => {
         // list code 
         BrandModel.find()
+        .populate("created_by")
         .then((brands) => {
 
             res.json({
@@ -26,6 +27,7 @@ class BrandController{
         if(req.file){
             data.image = req.file.filename;
         }
+        data.created_by = req.auth_user._id;
 
         let brand = new BrandModel(data);
         brand.save()

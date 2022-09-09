@@ -1,17 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const SupplierController = require("../controllers/supplier.controllers");
+const SupplierController = require("../controllers/supplier.controller");
 const isLoggedIn = require('../middleware/isLoggedIn.middleware');
+const { isAdminStaff } = require("../middleware/rbac.middleware");
 
 
 const suppCtrl = new SupplierController;
 
 router.route("/:id")
     .get(suppCtrl.getSupplierById)
-    .patch(isLoggedIn, suppCtrl.updateSupplierById)
+    .put( suppCtrl.updateSupplierById)
     .delete(suppCtrl.deleteSupplierById)
 
-router.get("/", suppCtrl.getAllSuppliers)
-
+router.route('/')
+    .post(isLoggedIn, suppCtrl.addSupplier)
+    .get(suppCtrl.getAllSuppliers);
 
 module.exports = router;

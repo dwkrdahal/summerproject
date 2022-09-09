@@ -2,9 +2,12 @@ const Category = require("../model/category.model");
 
 class categoryController {
     createCategory = (req, res, next) => {
-        const data = req.body;
+        let data = req.body;
 
-        data.created_by = req.auth_Category._id;
+        if(req.file){
+            data.image = req.file.filename;
+        }
+        data.created_by = req.auth_user._id;
 
         let cat = new Category(data);
         cat.save()
@@ -25,8 +28,7 @@ class categoryController {
 
     getAllCategories = (req, res, next) => {
         Category.find()
-            .populate("parent")
-            .populate("created_by")
+            // .populate("created_by")
             .then((cats) => {
                 res.json({
                     result: cats,
